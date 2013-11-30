@@ -3,7 +3,7 @@ var db = {};
 db.load = function(map_id, user) {
   $.ajax({
     type: "POST",
-    url: "db.php",
+    url: "http://zibi.openstreetmap.org.pl/yarl/db.php",
     data: "action=load&id="+map_id,
     success: function(out) {
       var items = jQuery.parseJSON(decodeURIComponent(out));

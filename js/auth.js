@@ -5,6 +5,19 @@ var auth = osmAuth({
 
 auth.user_id = 0;
 
+auth.updateInfo = function() {
+  if (auth.authenticated()) {
+    auth.xhr({
+      method: 'GET',
+      path: '/api/0.6/user/details'
+    }, auth.done);
+  } else {
+    $('#login-menu').removeClass("open");
+    $('#login-menu').html('<a href="#" id="login-in">Zaloguj</a>');
+    //map.removeControl(drawControl);
+  }
+};
+
 auth.done = function(err, res) {
   if (err) {
     alert('error! try clearing your browser cache');
@@ -18,26 +31,15 @@ auth.done = function(err, res) {
   auth.user_id = u.getAttribute('id');
   auth.changesets = changesets.getAttribute('count');
   
+  //add menu
   $('#login-menu').html('<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+auth.display_name+'<b class="caret"></b></a>\
       <ul class="dropdown-menu">\
-        <li><a id="#">Profil użytkowika</a></li>\
-        <li><a id="#">Moje mapy</a></li>\
+        <li><a href="#">Profil użytkowika</a></li>\
+        <li><a href="#">Moje mapy</a></li>\
         <li class="divider"></li>\
         <li class="dropdown-header">Ustawienia</li>\
         <li><a href="#" id="login-out">Wyloguj</a></li>\
       </ul>');
-}
-
-auth.updateInfo = function() {
-  if (auth.authenticated()) {
-    auth.xhr({
-      method: 'GET',
-      path: '/api/0.6/user/details'
-    }, auth.done);
-  } else {
-    $('#login-menu').removeClass("open");
-    $('#login-menu').html('<a href="#" id="login-in">Zaloguj</a>');
-  }
 };
 
 $('#login-menu').on('click', '#login-in', function(){

@@ -14,6 +14,7 @@ session_regenerate_id();
 <!DOCTYPE html>
 <html lang="pl">
   <head>
+    <?php $root = "http://localhost/mapdraw/" /*http://zibi.openstreetmap.org.pl/yarl*/ ?> 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,15 +22,19 @@ session_regenerate_id();
     <meta name="author" content="">
     <link rel="shortcut icon" href="favicon.png">
     <title>MapDraw</title>
-    <link href="libs/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="libs/leaflet.css" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="libs/leaflet.ie.css" /><![endif]-->
-    <link rel="stylesheet" href="libs/leaflet.draw.css" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="libs/leaflet.draw.ie.css" /><![endif]-->
+    <link href="<?php echo $root ?>libs/bootstrap.css" rel="stylesheet">
+    <link href="<?php echo $root ?>libs/leaflet.css" rel="stylesheet"/>
+    <link href="<?php echo $root ?>libs/leaflet.draw.css" rel="stylesheet"/>
+    <link href="<?php echo $root ?>libs/leaflet.awesome-markers.css" rel="stylesheet"/>
+    <!--[if lte IE 8]><link href="<?php echo $root ?>libs/leaflet.ie.css" rel="stylesheet"/><![endif]-->
+    <!--[if lte IE 8]><link href="<?php echo $root ?>libs/leaflet.draw.ie.css" rel="stylesheet"/><![endif]-->
     <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
-    <script src="libs/leaflet.draw.js"></script>
-    <script src="libs/osmauth.js"></script>
-    <link href="style.css" rel="stylesheet">
+    <script src="<?php echo $root ?>libs/leaflet.draw.js"></script>
+    <script src="<?php echo $root ?>libs/leaflet.awesome-markers.js"></script>
+    <script src="<?php echo $root ?>libs/osmauth.js"></script>
+    <link href="<?php echo $root ?>style.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -47,13 +52,20 @@ session_regenerate_id();
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">/name/</a>
+            <a class="navbar-brand" href="."><img src="<?php echo $root ?>img/map.svg" alt="map_draw"/> map_draw</a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <li><a href="#">About</a></li>
+              <li id="about"><a href="#">O mapie</a></li>
+              <li id="map-new"><a href="#">Utwórz nową mapę</a></li>
+              <!--
+              <li><a data-toggle="dropdown" href="#">Dropdown trigger</a>
+              <ul class="dropdown-menu" role="menu">
+                <li>Lorem ipsum</li>
+              </ul></li>
               <li><a href="#">Contact</a></li>
               <li><a id="save" href="#">Zapis</a></li>
+              -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown" id="login-menu">
@@ -67,7 +79,16 @@ session_regenerate_id();
 
       <!-- Begin page content -->
       <div class="container">
-        <div id="tools"></div>
+        <div id="tools" class="tools">
+          <div class="controls">
+            <i class="fa fa-plus fa-lg"></i>
+            <i class="fa fa-minus fa-lg"></i>
+            <i class="fa fa-location-arrow fa-lg"></i>
+            <div class="pull-right"><i class="fa fa-chevron-down fa-lg"></i></div>
+          </div>
+          <div class="divider"></div>
+          <div class="text">test</div>
+        </div>
         <div id="map"></div>
       </div>
     </div>
@@ -79,10 +100,10 @@ session_regenerate_id();
     </div>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="libs/bootstrap.min.js"></script>
-    <script src="js/db.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="<?php echo $root ?>libs/bootstrap.min.js"></script>
+    <script src="<?php echo $root ?>js/db.js"></script>
+    <script src="<?php echo $root ?>js/map.js"></script>
+    <script src="<?php echo $root ?>js/auth.js"></script>
     <script>
       <?php 
         if(!empty($_GET["map"]))
