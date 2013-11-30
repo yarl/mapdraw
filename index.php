@@ -80,7 +80,14 @@ session_regenerate_id();
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="libs/bootstrap.min.js"></script>
+    <script src="js/db.js"></script>
     <script src="js/map.js"></script>
     <script src="js/auth.js"></script>
+    <script>
+      <?php 
+        if(!empty($_GET["map"]))
+          echo 'db.load("'.$_GET["map"].'", "");'
+      ?>
+    </script>
   </body>
 </html>
