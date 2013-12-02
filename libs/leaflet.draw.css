@@ -14,13 +14,6 @@
 	margin-top: 0;
 }
 
-.leaflet-draw-toolbar-notop a:first-child {
-	border-top-right-radius: 0;
-}
-
-.leaflet-draw-toolbar-nobottom a:last-child {
-	border-bottom-right-radius: 0;
-}
 
 .leaflet-draw-toolbar a {
 	background-image: url('images/spritesheet.png');
@@ -33,9 +26,9 @@
 }
 
 .leaflet-draw a {
-	display: block;
-	text-align: center;
-	text-decoration: none;
+	display: inline-block;
+	/*text-align: center;
+	text-decoration: none;*/
 }
 
 /* ================================================================== */
@@ -48,8 +41,8 @@
 	margin: 0;
 	padding: 0;
 	position: absolute;
-	left: 26px; /* leaflet-draw-toolbar.left + leaflet-draw-toolbar.width */
-	top: 0;
+	right: 0;
+	top: 0 !important;
 }
 
 .leaflet-right .leaflet-draw-actions {
@@ -65,26 +58,8 @@
 	border-left: none;
 }
 
-.leaflet-draw-actions li:last-child a {
-	-webkit-border-radius: 0 4px 4px 0;
-	        border-radius: 0 4px 4px 0;
-}
-
-.leaflet-right .leaflet-draw-actions li:last-child a {
-	-webkit-border-radius: 0;
-	        border-radius: 0;
-}
-
-.leaflet-right .leaflet-draw-actions li:first-child a {
-	-webkit-border-radius: 4px 0 0 4px;
-	        border-radius: 4px 0 0 4px;
-}
-
 .leaflet-draw-actions a {
-	background-color: #919187;
-	border-left: 1px solid #AAA;
-	color: #FFF;
-	font: 11px/19px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	color: #777;
 	line-height: 28px;
 	text-decoration: none;
 	padding-left: 10px;
@@ -108,14 +83,7 @@
 	line-height: 27px;
 }
 
-.leaflet-draw-actions a:hover {
-	background-color: #A0A098;
-}
 
-.leaflet-draw-actions-top.leaflet-draw-actions-bottom a {
-	height: 26px;
-	line-height: 26px;
-}
 
 /* ================================================================== */
 /* Draw toolbar
@@ -241,4 +209,18 @@
 
 .leaflet-edit-resize {
 	cursor: pointer;
+}
+
+
+.leaflet-draw-section > div {
+  box-shadow: none;
+  height: 25px;
+}
+
+.leaflet-draw-section > div > a {
+  float: left;
+}
+
+.leaflet-draw-section > div > a:last-child {
+  float: left;
 }

@@ -10,11 +10,13 @@ session_regenerate_id();
 } if(!isset($_SESSION['userid'])) {
   $_SESSION['userid'] = 0;
 }
+
+$root = "http://zibi.openstreetmap.org.pl/yarl/"; /*http://zibi.openstreetmap.org.pl/yarl*/
+$map = isset($_GET['map']) ? $_GET["map"] : null;
 ?>
 <!DOCTYPE html>
 <html lang="pl">
   <head>
-    <?php $root = "http://localhost/mapdraw/" /*http://zibi.openstreetmap.org.pl/yarl*/ ?> 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,7 +59,6 @@ session_regenerate_id();
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
               <li id="about"><a href="#">O mapie</a></li>
-              <li id="map-new"><a href="#">Utwórz nową mapę</a></li>
               <!--
               <li><a data-toggle="dropdown" href="#">Dropdown trigger</a>
               <ul class="dropdown-menu" role="menu">
@@ -68,6 +69,10 @@ session_regenerate_id();
               -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
+              <?php 
+                if(!empty($map) && $map === 'new') { echo '<li><a id="map-save" href="#">Zapisz</a></li>'; }
+                else { echo '<li id="map-new"><a href="'.$root.'map/new">Utwórz nową mapę</a></li>'; }
+              ?>
               <li class="dropdown" id="login-menu">
                 <a href="#" id="login-in">Zaloguj</a>
               </li>
@@ -86,8 +91,13 @@ session_regenerate_id();
             <i class="fa fa-location-arrow fa-lg"></i>
             <div class="pull-right"><i class="fa fa-chevron-down fa-lg"></i></div>
           </div>
-          <div class="divider"></div>
-          <div class="text">test</div>
+          <div class="edits"></div>
+          <div class="text"></div>
+        </div>
+        <div id="helper" class="tools">
+          <h3>Ustawienia obiektu</h3>
+          <input type="text" class="popup-text form-control" />
+          <button class="popup-save btn" type="button">Zastosuj</button>
         </div>
         <div id="map"></div>
       </div>
@@ -106,8 +116,10 @@ session_regenerate_id();
     <script src="<?php echo $root ?>js/auth.js"></script>
     <script>
       <?php 
-        if(!empty($_GET["map"]))
-          echo 'db.load("'.$_GET["map"].'", "");'
+        if(!empty($map)) {
+          if($map == "new") { echo 'map.addControl(drawControl); $(".leaflet-control-container>div>div.leaflet-draw").appendTo("#tools .edits").removeClass("leaflet-control");'; }
+          else { echo 'db.load("'.$map.'", "");'; }
+        }
       ?>
     </script>
   </body>

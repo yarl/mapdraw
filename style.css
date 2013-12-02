@@ -114,14 +114,25 @@ code {
 
 /* Tools
 -------------------------------------------------- */
+#tools {
+  left: 20px;
+}
+
+#helper {
+  right: 20px;
+  display: none;
+  z-index: 100;
+  padding: 10px;
+}
+
 .tools {
   position: absolute;
   z-index: 10;
   top: 60px;
-  left: 20px;
+  
   background: #fafafa;
   max-height: calc(100% - 140px);
-  height: 31px;
+  height: /*31px;*/ auto;
   width: 300px;
   padding: 5px 10px;
   
@@ -134,24 +145,29 @@ code {
   transition: all 0.5s ease;
 }
 
-.tools .text {
-  display: none;
-  background: transparent;
+.tools .divider {
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+  border-bottom: 1px rgb(230,230,230) solid;
 }
 
-.tools .divider {
-  background-color: rgb(230, 230, 230);
+.tools .text, .tools .edits {
   display: none;
-  height: 1px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+}
+
+.tools h3 {
+  font-family: 'Oxygen', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px
 }
 
 .tools-max {
-  height: calc(100% - 140px);
+  height: auto; /*calc(100% - 140px);*/
+  padding-bottom: 10px;
 }
 
-.tools-max .text, .tools-max .divider {
+.tools-max .text, .tools-max .edits, .tools-max .divider {
   display: block;
 }
 
@@ -168,4 +184,3 @@ code {
 #tools .controls > i {
   margin-right: 5px;
 }
-

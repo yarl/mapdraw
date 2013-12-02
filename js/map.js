@@ -30,95 +30,55 @@ $(".controls .fa-location-arrow").click(function(){
 $('#tools').on('click', '.controls .fa-chevron-down', function(){
   $('#tools').addClass('tools-max');
   $(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+  $('#tools .controls').addClass('divider');
 });
 
 $('#tools').on('click', '.controls .fa-chevron-up', function(){
   $('#tools').removeClass('tools-max');
   $(this).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+  $('#tools .controls').removeClass('divider');
 });
 
-/******************************************************************************/
-/********************************** DRAW **************************************/
+/* Draw
+-------------------------------------------------- */
 map.items = new L.FeatureGroup();
 map.addLayer(map.items);
 
 var drawControl = new L.Control.Draw({
   position: 'topright',
   draw: {
-    polyline: {
-      metric: true
-    },
+    polyline: { metric: true },
     polygon: {
-      allowIntersection: false,
-      showArea: true,
-      drawError: {
-        color: '#b00b00',
-        timeout: 1000
-      },
-      shapeOptions: {
-        color: '#bada55'
-      }
+      allowIntersection: false, showArea: true,
+      drawError: { color: '#b00b00', timeout: 1000 },
+      shapeOptions: { color: '#bada55' }
     },
-    circle: {
-      shapeOptions: {
-        color: '#662d91'
-      }
-    },
+    circle: { shapeOptions: { color: '#662d91' } },
     marker: true
   },
-  edit: {
-    featureGroup: map.items,
-    remove: false
-  }
+  edit: { featureGroup: map.items, remove: false }
 });
-
-map.getJSON = function(){
-  var out = new Object();
-  var n = 0;
-  map.items.eachLayer(function(layer) {
-    out[n] = layer.toGeoJSON();
-    out[n].properties = {
-      type: 0,
-      popup: layer.getPopup() === undefined ? 0 : layer.getPopup().getContent()
-    };
-    ++n;
-  });
-  return out
-};
-
-map.showJSON = function(){
-  $('#testing').html(JSON.stringify(map.getJSON()));
-};
 
 map.on('draw:created', function(e) {
-  var type = e.layerType,
-          layer = e.layer;
-
-  $('#tools').show();
+  var type = e.layerType, layer = e.layer;
   map.nowEdit = layer;
   
-  if (type === 'marker') {
-    $('#tools .text').html('<input type="checkbox" name="popup">Dodaj podpis\
-      <input type="text" name="popup-text"><br /><br />\
-      <button type="button">Zastosuj</button>')
-    //layer.bindPopup('A popup!');
-  }
-
+  $('#helper').fadeIn();
+  layer.on('click', function(e) {
+    map.nowEdit = layer;
+    $('#helper .popup-text').val(layer._popup === undefined ? "" : layer._popup.getContent());
+    $('#helper').fadeIn();
+  });
+  
   map.items.addLayer(layer);
-  map.showJSON();
+  map.updateJSON();
 });
 
-$("#map-new a").click(function(){
-  map.addControl(drawControl);
+$('#helper .popup-save').click(function(){
+    map.nowEdit.closePopup().bindPopup($('#helper .popup-text').val()).openPopup();
+    $('#helper').fadeOut();
+    map.updateJSON();
 });
-
-$('#tools .text').on('click', 'button[type=button]', function(){
-  $("#tools input[name=popup]").is(':checked') ?
-    map.nowEdit.bindPopup($('#tools input[name=popup-text]').val()) :
-    map.nowEdit.unbindPopup();
-    map.showJSON();
-});
-
 
 map.on('draw:edited', function(e) {
   var layers = e.layers;
@@ -127,17 +87,26 @@ map.on('draw:edited', function(e) {
     countOfEditedLayers++;
   });
   console.log("Edited " + countOfEditedLayers + " layers");
-  map.showJSON();
+  map.updateJSON();
 });
 
-$('#save').click(function() {
-  //console.log("action=save&author="+auth.user_id+"&data="+encodeURIComponent(JSON.stringify(map.items.toGeoJSON())));
-  $.ajax({
-    type: "POST",
-    url: "db.php",
-    data: "action=save&author="+auth.user_id+"&data="+encodeURIComponent(JSON.stringify(map.getJSON())),
-    success: function(out) {
-      alert(out);
-    }
+/* JSON
+-------------------------------------------------- */
+
+map.getJSON = function(){
+  var out = new Object();
+  var n = 0;
+  map.items.eachLayer(function(layer) {
+    out[n] = layer.toGeoJSON();
+    out[n].properties = {
+      type: 0,
+      popup: layer._popup === undefined ? 0 : layer._popup.getContent()
+    };
+    ++n;
   });
-});
+  return out;
+};
+
+map.updateJSON = function(){
+  $('#testing').html(JSON.stringify(map.getJSON()));
+};
