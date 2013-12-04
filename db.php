@@ -46,7 +46,7 @@ else if ($_POST['action'] === 'load' && ($_SESSION['ip'] == $_SERVER['REMOTE_ADD
   //$map_author = $_POST['author'];
   
   $selected = $maps->findOne(array("id" => $map_id));
-  echo json_encode($selected);
+  echo $selected == null ? "0" : json_encode($selected);
 }
 
 else {

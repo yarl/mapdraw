@@ -123,7 +123,25 @@ code {
   display: none;
   z-index: 100;
   padding: 10px;
+
+  -webkit-transition: all 1s ease-out;
+  -moz-transition: all 1s ease-out;
+  -o-transition: all 1s ease-out;
+  -ms-transition: all 1s ease-out;
+  transition: all 1s ease-out;
 }
+
+.helper-colors .btn {
+  width: 46px;
+  height: 25px;
+}
+
+.helper-colors .color-red      { background:#d63e2a; }
+.helper-colors .color-orange   { background:#f69730; }
+.helper-colors .color-green    { background:#72b026; }
+.helper-colors .color-blue     { background:#38aadd; }
+.helper-colors .color-cadetblue  { background:#436978; }
+.helper-colors .color-darkpurple { background:#5b396b; }
 
 .tools {
   position: absolute;
@@ -149,6 +167,14 @@ code {
   padding-bottom: 10px;
   margin-bottom: 5px;
   border-bottom: 1px rgb(230,230,230) solid;
+}
+
+.tools textarea.divider, .tools input.divider {
+  border: 1px solid #cccccc;
+}
+
+.tools .divider-noline {
+  padding-bottom: 10px;
 }
 
 .tools .text, .tools .edits {
@@ -183,4 +209,14 @@ code {
 
 #tools .controls > i {
   margin-right: 5px;
+}
+
+.modal.fade .modal-dialog {
+  -webkit-transform: translate(0, 30px);
+  -ms-transform: translate(0, 30px);
+  transform: translate(0, 30px);
+  -webkit-transition: -webkit-transform 0.3s ease-out;
+  -moz-transition: -moz-transform 0.3s ease-out;
+  -o-transition: -o-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
 }

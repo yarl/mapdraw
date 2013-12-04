@@ -23,6 +23,10 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="favicon.png">
+    <meta property="og:image" content="http://zibi.openstreetmap.org.pl/yarl/img/map.png" />
+    <meta property="og:title" content="MapDraw" />
+    <meta property="og:url" content="<?php echo $root ?>" />
+    
     <title>MapDraw</title>
     <link href="<?php echo $root ?>libs/bootstrap.css" rel="stylesheet">
     <link href="<?php echo $root ?>libs/leaflet.css" rel="stylesheet"/>
@@ -94,10 +98,24 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
           <div class="edits"></div>
           <div class="text"></div>
         </div>
-        <div id="helper" class="tools">
+        <div id="helper" class="tools out">
           <h3>Ustawienia obiektu</h3>
-          <input type="text" class="popup-text form-control" />
-          <button class="popup-save btn" type="button">Zastosuj</button>
+          <p>Kolor</p>
+          <div class="btn-group helper-colors divider" data-toggle="buttons">
+            <label class="btn btn-sm color-red"><input type="radio"> </label>
+            <label class="btn btn-sm color-orange"><input type="radio"> </label>
+            <label class="btn btn-sm color-green"><input type="radio"> </label>
+            <label class="btn btn-sm color-blue"><input type="radio"> </label>
+            <label class="btn btn-sm color-cadetblue"><input type="radio"> </label>
+            <label class="btn btn-sm color-darkpurple"><input type="radio"> </label>
+          </div>
+          <div class="divider-noline">
+            <p>Tekst</p>
+            <textarea class="popup-text form-control divider"></textarea>
+          </div>
+          <button class="popup-save btn btn-success btn-sm" type="button"><i class="fa fa-check"></i> Zapisz</button>
+          <button class="popup-move btn btn-sm" type="button" data-toggle="button"><i class="fa fa-arrows"></i> Przesuń</button>
+          <button class="popup-delete btn btn-danger btn-sm pull-right" type="button"><i class="fa fa-times"></i> Usuń</button>
         </div>
         <div id="map"></div>
       </div>
@@ -106,6 +124,23 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
     <div id="footer">
       <div class="container">
         <p class="text-muted credit" id="testing"></p>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          </div>
+        </div>
       </div>
     </div>
 
@@ -117,7 +152,7 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
     <script>
       <?php 
         if(!empty($map)) {
-          if($map == "new") { echo 'map.addControl(drawControl); $(".leaflet-control-container>div>div.leaflet-draw").appendTo("#tools .edits").removeClass("leaflet-control");'; }
+          if($map == "new") { echo 'map.loadNew();'; }
           else { echo 'db.load("'.$map.'", "");'; }
         }
       ?>
