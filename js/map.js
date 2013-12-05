@@ -1,3 +1,5 @@
+_ROOT_ = "http://zibi.openstreetmap.org.pl/yarl/";
+
 map = new L.Map('map', {
   layers: [new L.TileLayer('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {maxZoom: 20})],
   center: [localStorage['map-lat'] !== undefined ? localStorage['map-lat'] : 52.019,
@@ -189,7 +191,16 @@ map.on('click', function(e) {
 -------------------------------------------------- */
 
 map.loadJSON = function(items) {
-  var text = '<h3>Obiekty na mapie</h3>';
+  var text = '';
+  //items.title
+  
+  text += '<h2>';
+  text += items.title === undefined ? "<em>bez nazwy</em>" : items.title;
+  text += '</h2><p>';
+  text += items.desc === undefined ? "<em>bez opisu</em>" : items.desc.replace(/#(\S+)/gm, '<a href="'+_ROOT_+'hashtag/\$1">#\$1</a>');
+  text += '</p>';
+  
+  text += '<h3>Obiekty na mapie</h3>';
   //console.log(items);
 
   L.geoJson(items.data, {

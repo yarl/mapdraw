@@ -58,7 +58,7 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="."><img src="<?php echo $root ?>img/map.svg" alt="map_draw"/> map_draw</a>
+            <a class="navbar-brand" href="<?php echo $root ?>"><img src="<?php echo $root ?>img/map.svg" alt="map_draw"/> map_draw</a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">

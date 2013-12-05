@@ -185,11 +185,20 @@ code {
   margin-right: -1px;
 }
 
+.tools h2 {
+  font-family: 'Oxygen', sans-serif;
+  font-size: 25px;
+}
+
 .tools h3 {
   font-family: 'Oxygen', sans-serif;
   font-size: 13px;
   font-weight: 600;
   margin-top: 10px
+}
+
+.tools p {
+  margin-bottom: 20px;
 }
 
 .tools-max {

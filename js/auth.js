@@ -34,7 +34,7 @@ auth.done = function(err, res) {
   //add menu
   $('#login-menu').html('<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+auth.display_name+'<b class="caret"></b></a>\
       <ul class="dropdown-menu">\
-        <li><a href="#">Profil użytkowika</a></li>\
+        <li><a href="'+_ROOT_+'user/'+auth.display_name+'">Profil użytkowika</a></li>\
         <li><a href="#">Moje mapy</a></li>\
         <li class="divider"></li>\
         <li class="dropdown-header">Ustawienia</li>\

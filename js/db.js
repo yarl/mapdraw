@@ -4,7 +4,7 @@ db.info = {};
 db.load = function(map_id, user) {
   $.ajax({
     type: "POST",
-    url: "http://zibi.openstreetmap.org.pl/yarl/db.php",
+    url: _ROOT_+"db.php",
     data: "action=load&id="+map_id,
     success: function(out) {
       if(out === "0") {
@@ -21,7 +21,7 @@ db.load = function(map_id, user) {
 db.save = function(info, data) {
   $.ajax({
     type: "POST",
-    url: "http://zibi.openstreetmap.org.pl/yarl/db.php",
+    url: _ROOT_+"db.php",
     data: "action=save&author="+auth.user_id+"&info="+encodeURIComponent(info)+"&data="+encodeURIComponent(data),
     success: function(out) {
       alert(out);
