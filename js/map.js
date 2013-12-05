@@ -47,10 +47,14 @@ map.loadNew = function() {
   $(".leaflet-control-container>div>div.leaflet-draw").appendTo("#tools .edits").removeClass("leaflet-control");
   $("#tools .controls .fa-chevron-down").click();
   $('#tools .edits').addClass('divider');
-  $('#tools .text').html('<input type="text" id="map-title" class="form-control divider" placeholder="Tytuł mapy">\
+  $('#tools .info').html('<input type="text" id="map-title" class="form-control divider" placeholder="Tytuł mapy">\
       <textarea id="map-desc" class="form-control divider" rows="2" placeholder="Opis mapy"></textarea>\
       <div class="btn-group" data-toggle="buttons"><label class="btn btn-default btn-sm active"><input type="radio">publiczna</label><label class="btn btn-default btn-sm"><input type="radio">prywatna</label></div>');
 };
+
+$('#tools .info').on('blur', '.form-control', function() {
+  map.updateJSON();
+});
 
 /* Draw
 -------------------------------------------------- */
@@ -273,7 +277,12 @@ map.getJSON = function() {
 };
 
 map.updateJSON = function() {
+  db.info.title = $("#map-title").val();
+  db.info.desc = $("#map-desc").val();
+  var info = JSON.stringify(db.info);
+  
   var json = JSON.stringify(map.getJSON());
-  $('#testing').html(json);
+  $('#testing').html(json+"<br />"+info);
+  console.log(info);
   localStorage['map-data'] = json;
 };

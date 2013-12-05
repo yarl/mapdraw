@@ -96,6 +96,7 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
             <div class="pull-right"><i class="fa fa-chevron-down fa-lg"></i></div>
           </div>
           <div class="edits"></div>
+          <div class="info"></div>
           <div class="text"></div>
         </div>
         <div id="helper" class="tools out">

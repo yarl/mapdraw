@@ -181,6 +181,10 @@ code {
   display: none;
 }
 
+.tools .text .btn-group > .btn:first-child {
+  margin-right: -1px;
+}
+
 .tools h3 {
   font-family: 'Oxygen', sans-serif;
   font-size: 13px;

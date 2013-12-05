@@ -1,4 +1,5 @@
 var db = {};
+db.info = {};
 
 db.load = function(map_id, user) {
   $.ajax({
@@ -26,7 +27,7 @@ db.save = function(data) {
       alert(out);
     }
   });
-}
+};
 
 $('#map-save').click(function() {
   db.save(JSON.stringify(map.getJSON()));
