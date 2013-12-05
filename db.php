@@ -27,13 +27,17 @@ function encodeURIComponent($str) {
 if ($_POST['action'] === 'save' && ($_SESSION['ip'] == $_SERVER['REMOTE_ADDR'])) {
   $map_id = substr(md5(uniqid(mt_rand(), true)), 0, 6);
   $map_author = $_POST['author'];
+  
   $map_data = json_decode(decodeURIComponent($_POST['data']));
+  $map_info = json_decode(decodeURIComponent($_POST['info']));
   
   $map = new stdClass();
   $map->id = $map_id;
   $map->author = $map_author;
+  $map->title = $map_info->title;
+  $map->desc = $map_info->desc;
   $map->data = $map_data;
-  
+
   $maps->insert($map);
 
   echo $map_id;

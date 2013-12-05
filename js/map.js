@@ -56,6 +56,10 @@ $('#tools .info').on('blur', '.form-control', function() {
   map.updateJSON();
 });
 
+$('#map-save').click(function() {
+  db.save(JSON.stringify(db.info), JSON.stringify(map.getJSON()));
+});
+
 /* Draw
 -------------------------------------------------- */
 map.items = new L.FeatureGroup();
@@ -189,7 +193,7 @@ map.loadJSON = function(items) {
   //console.log(items);
 
   L.geoJson(items.data, {
-    pointToLayer: function (feature, latlng) {
+    /*pointToLayer: function (feature, latlng) {
       if(feature.properties.radius) {
         console.log(latlng);
         var o = L.circle(latlng, {
@@ -198,10 +202,20 @@ map.loadJSON = function(items) {
         });
         o.setRadius(feature.properties.radius);
       } else return;
-    },
+    },*/
     
     onEachFeature: function(feature, layer){
       text += '<div>';
+      var color_;
+      switch(feature.properties.color) {
+        case 'red':         color_ = '#d63e2a'; break;
+        case 'orange':      color_ = '#f69730'; break;
+        case 'green':       color_ = '#72b026'; break;
+        case 'blue':        color_ = '#38aadd'; break;
+        case 'cadetblue':   color_ = '#436978'; break;
+        case 'darkpurple':  color_ = '#5b396b'; break;
+      }
+      
       switch(feature.geometry.type) {
         case 'Point': 
           if(feature.properties.radius) {
@@ -215,11 +229,11 @@ map.loadJSON = function(items) {
           }
         break;
         case 'LineString':
-          layer.setStyle({color:feature.properties.color});
+          layer.setStyle({color:color_});
           text += '<i class="fa fa-chevron-right"></i> ';
         break;
         case 'Polygon':
-          layer.setStyle({color:feature.properties.color});
+          layer.setStyle({color:color_});
           text += '<i class="fa fa-square"></i> ';
         break;
       }

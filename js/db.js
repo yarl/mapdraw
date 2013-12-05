@@ -18,17 +18,13 @@ db.load = function(map_id, user) {
   });
 };
 
-db.save = function(data) {
+db.save = function(info, data) {
   $.ajax({
     type: "POST",
     url: "http://zibi.openstreetmap.org.pl/yarl/db.php",
-    data: "action=save&author="+auth.user_id+"&data="+encodeURIComponent(data),
+    data: "action=save&author="+auth.user_id+"&info="+encodeURIComponent(info)+"&data="+encodeURIComponent(data),
     success: function(out) {
       alert(out);
     }
   });
 };
-
-$('#map-save').click(function() {
-  db.save(JSON.stringify(map.getJSON()));
-});
