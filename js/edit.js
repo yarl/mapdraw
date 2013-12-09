@@ -38,7 +38,7 @@ var Edit = function() {
         created : '',
         lastedit : ''
       };
-      
+          
       /**
        * Strat editing map
        * @returns {undefined}
@@ -50,20 +50,31 @@ var Edit = function() {
         this.initToolbox();
         this.initHelper();
         
+        /**
+         * Add new item to map
+         */
         map.on('draw:created', function(e) {
           var layer = e.layer;
           map.nowEdit = layer;
-
-          $('#helper').show();
+          
+          $('#helper .popup-text').val('');
           $('#helper .helper-colors .color-cadetblue').click();
-
+          $('#helper').show();
+          
+          /**
+           * Click on item
+           */
           layer.on('click', function(e) {
             map.nowEdit = layer;
+            
+            $('#helper .helper-colors .color-'+map.nowEdit.options.nowColor).click();
             $('#helper .popup-text').val(layer._popup === undefined ? "" : layer._popup.getContent());
-            $('#helper').fadeIn('fast');
+            $('#helper').show();
           });
 
           map.items.addLayer(layer);
+          map.items_[map.itemsCounter] = layer;
+          map.itemsCounter++;
           map.updateJSON();
         });
       };
@@ -78,14 +89,59 @@ var Edit = function() {
         $('#tools .edits').addClass('divider');
         $('#tools .info').html('<input type="text" id="map-title" class="form-control divider" placeholder="Tytuł mapy">\
             <textarea id="map-desc" class="form-control divider" rows="2" placeholder="Opis mapy"></textarea>\
-            <div class="btn-group" data-toggle="buttons">\
-              <label class="btn btn-default btn-sm active"><input type="radio">publiczna</label>\
-              <label class="btn btn-default btn-sm"><input type="radio">prywatna</label>\
-            </div>');
+            <button id="map-privacy" type="button" class="btn btn-sm btn-default"><i class="fa fa-unlock-alt"></i> Udostępnianie: <strong>mapa publiczna</strong></button>');
         
         $('#tools .info').on('blur', '.form-control', function() {
           map.updateJSON();
         });
+        
+        $('#tools .info').on('click', '#map-privacy', function() {
+          $('#modal .modal-title').html('Udostępnianie mapy');
+          $('#modal .modal-body').html('<div class="btn-group">\
+              <button type="button" class="btn btn-default">Publiczna</button>\
+              <button type="button" class="btn btn-default">Dla wybranych</button>\
+              <button type="button" class="btn btn-default">Prywatna</button>\
+            </div>\
+            <p>TODO: oskryptować, dodać pola kto może edytować (nikt/wszyscy/wybrani)</p>');
+          $('#modal').modal();
+          return false;
+        });
+        
+        $('#tools .text').on('click', '.text-objects li', function() {
+          var item = map.items_[($(this).attr('data-id'))];
+
+          if(item instanceof L.Marker) map.setView(item.getLatLng());
+          else map.setView(item.getBounds().getCenter());
+
+          item.fire('click');
+          return false;
+        });
+      };
+      
+      /**
+       * 
+       * @returns {undefined}
+       */
+      this.updateItemsList = function() {
+        var text = '<ul class="text-objects">';
+        //var n = 0;
+        
+        map.items.eachLayer(function(layer) {
+          text += '<li data-id="'+map.items_.indexOf(layer)+'">';
+          
+          if(layer instanceof L.Marker) text += '<i class="tools-icon icon-marker"></i> ';
+          else if(layer instanceof L.Polygon) text += '<i class="tools-icon icon-polygon"></i> ';
+          else if(layer instanceof L.Rectangle) text += '<i class="tools-icon icon-rectangle"></i> ';
+          else if(layer instanceof L.Polyline) text += '<i class="tools-icon icon-polyline"></i> ';
+          
+          text += layer._popup === undefined ? "<em>bez opisu</em>" : layer._popup.getContent();
+          text += '</li>';
+          
+          //layer.bindPopup('Hello');
+        });
+        
+        
+        $('#tools .text').html(text);
       };
       
       /**
@@ -100,6 +156,7 @@ var Edit = function() {
           var color = $(this).attr('class');
             color = color.substring(17).replace(' active','');
 
+          map.nowEdit.options.nowColor = color;
           if(map.nowEdit instanceof L.Marker) {
             var icon = $.extend(true, {}, map.nowEdit.options.icon);
             icon.options.markerColor = color;

@@ -14,6 +14,9 @@ map.on('moveend', function(e){
   localStorage['map-zoom'] = map.getZoom();
 });
 
+map.itemsCounter = 0;
+map.items_ = new Array();
+
 var db = new Db();
 var auth = new Auth();
 var edit = new Edit();
@@ -31,8 +34,9 @@ map.loadMap = function(data) {
   var text = '<h2>'+title+'</h2><p>'+desc+'</p><p>Autor: '+author+'</p><h3>Obiekty na mapie</h3>';
   text += '<ul class="text-objects">';
 
+  var n = 0;
   L.geoJson(data.data, {
-    onEachFeature: function(feature, layer){
+    onEachFeature: function(feature, layer) {
       var color_;
       switch(feature.properties.color) {
         case 'red':         color_ = '#d63e2a'; break;
@@ -42,20 +46,16 @@ map.loadMap = function(data) {
         case 'cadetblue':   color_ = '#436978'; break;
         case 'darkpurple':  color_ = '#5b396b'; break;
       }
-      
-      text += '<li>';
-      //var desc = 
+
+      text += '<li data-id="'+n+'">';
+      map.items_[n] = layer;
+
       switch(feature.geometry.type) {
         case 'Point': 
-          if(feature.properties.radius) {
-            layer = new L.circle(feature.geometry.coordinates, feature.properties.radius);
-            text += '<i class="fa fa-map-marker"></i> ';
-          } else {
-            layer.setIcon(L.AwesomeMarkers.icon({
-              icon: 'null', prefix: 'fa', markerColor: feature.properties.color
-            }));
-            text += '<i class="fa fa-map-marker"></i> ';
-          }
+          layer.setIcon(L.AwesomeMarkers.icon({
+            icon: 'null', prefix: 'fa', markerColor: feature.properties.color
+          }));
+          text += '<i class="fa fa-map-marker"></i> ';
         break;
         case 'LineString':
           layer.setStyle({color:color_});
@@ -68,13 +68,33 @@ map.loadMap = function(data) {
       }
 
       text += feature.properties.popup+'</li>';
+      n++;
       
       if (feature.properties) {
         if(feature.properties.popup)
           layer.bindPopup(feature.properties.popup);
       };
     }
-  }).addTo(map);
+  }).addTo(map.items);
+  text += '</ul>';
+  
+  map.fitBounds(map.items.getBounds());
+  
+  $('#tools .text').on('click', '.text-objects li', function() {
+    var item = map.items_[($(this).attr('data-id'))];
+    
+    if(item instanceof L.Marker) {
+      map.setView(item.getLatLng());
+    } else {
+      map.setView(item.getBounds().getCenter());
+    }
+    
+    if(item._popup !== undefined)
+      item.openPopup();
+    //console.log(map.items.getLayers());
+    return false;
+  });
+  
   $('#tools .controls .fa-chevron-down').click();
   $('#tools .text').html(text);
 };
@@ -94,7 +114,7 @@ map.getJSON = function() {
   map.items.eachLayer(function(layer) {
     out[n] = layer.toGeoJSON();
     out[n].properties = {
-      popup: layer._popup === null || layer._popup === undefined ? 0 : layer._popup.getContent()
+      popup: layer._popup === null || layer._popup === undefined ? '' : layer._popup.getContent()
     };
     var prop = out[n].properties;
     
@@ -117,11 +137,12 @@ map.getJSON = function() {
 };
 
 map.updateJSON = function() {
+  edit.updateItemsList();
   edit.mapInfo.title = $("#map-title").val();
   edit.mapInfo.desc = $("#map-desc").val();
   var info = JSON.stringify(map.info);
   
   var json = JSON.stringify(map.getJSON());
-  $('#testing').html(json+"<br />"+info);
+  /*$('#testing').html(json+"<br />"+info);*/
   localStorage['map-data'] = json;
 };
