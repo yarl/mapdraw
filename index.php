@@ -6,7 +6,8 @@ session_regenerate_id();
   $_SESSION['inicjuj'] = true;
   $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
 } if($_SESSION['ip'] != $_SERVER['REMOTE_ADDR']) {
-  die('Niezgodność sesji!');      
+  /*die('Niezgodność sesji!');*/
+  $_SESSION['userid'] = 0;
 } if(!isset($_SESSION['userid'])) {
   $_SESSION['userid'] = 0;
 }
@@ -48,7 +49,7 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
   </head>
 
   <body>
-    <div id="wrap">
+    <div id="wrap" class="wrap-max">
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
           <div class="navbar-header">
@@ -147,14 +148,18 @@ $map = isset($_GET['map']) ? $_GET["map"] : null;
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="<?php echo $root ?>libs/bootstrap.min.js"></script>
-    <script src="<?php echo $root ?>js/db.js"></script>
-    <script src="<?php echo $root ?>js/map.js"></script>
+    
     <script src="<?php echo $root ?>js/auth.js"></script>
+    <script src="<?php echo $root ?>js/db.js"></script>
+    <script src="<?php echo $root ?>js/edit.js"></script>
+    <script src="<?php echo $root ?>js/interface.js"></script>
+    
+    <script src="<?php echo $root ?>js/map.js"></script>
     <script>
       <?php 
         if(!empty($map)) {
-          if($map == "new") { echo 'map.loadNew();'; }
-          else { echo 'db.load("'.$map.'", "");'; }
+          if($map == "new") { echo 'edit.start();'; }
+          else { echo "db.load('$map');"; }
         }
       ?>
     </script>

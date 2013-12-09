@@ -1,7 +1,7 @@
 html,
 body {
   height: 100%;
-  background: #fafafa;
+  background: #fff;
   color: #777; /*b3b3b3;*/
   font-family: 'Oxygen', sans-serif;
 }
@@ -81,8 +81,11 @@ padding-bottom: 10px;
 /* Not required for template or sticky footer method. */
 
 .container {
-  width: 100%;
   padding: 0 10px;
+}
+
+.wrap-max .container {
+  width: 100%;
 }
 
 #wrap > .container {
@@ -183,6 +186,20 @@ code {
 
 .tools .text .btn-group > .btn:first-child {
   margin-right: -1px;
+}
+
+.tools .text .text-objects {
+  padding: 0;
+}
+
+.tools .text .text-objects > li {
+  list-style-type: none;
+  padding-bottom: 2px;
+  cursor: pointer;
+}
+
+.tools .text .text-objects > li i {
+  width: 15px;
 }
 
 .tools h2 {

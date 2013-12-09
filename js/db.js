@@ -1,5 +1,5 @@
 var Db = function() {
-    var constructor = function Db() {
+    var init = function Db() {
       
       /**
        * Map loading
@@ -16,7 +16,7 @@ var Db = function() {
               $('#modal').modal();
               return false;
             }
-            map.loadJSON($.parseJSON(out));
+            map.loadMap($.parseJSON(out));
             return true;
           }
         });
@@ -37,7 +37,7 @@ var Db = function() {
         $.ajax({
           type: "POST",
           url: "db.php",
-          data: "action=save&author="+auth.user_id+"&info="+encodeURIComponent(info)+"&data="+encodeURIComponent(data),
+          data: "action=save&info="+encodeURIComponent(info)+"&data="+encodeURIComponent(data),
           success: function(out) {
             window.location.pathname = '/yarl/map/'+out;
           }
@@ -45,6 +45,6 @@ var Db = function() {
       };
     };
 
-    return constructor;
+    return init;
 }();
 

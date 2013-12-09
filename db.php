@@ -20,20 +20,27 @@ function encodeURIComponent($str) {
     return strtr(rawurlencode($str), $revert);
 }
 
+function generateID($maps) {
+  $id = substr(md5(uniqid(mt_rand(), true)), 0, 6);
+
+  if($maps->findOne(array("id" => $id)) == null) { return $id; }
+  else { generateID(); }
+}
+
 /**
  * Saving map
  * @source: http://stackoverflow.com/a/8075691/1418878 (generating id)
  */
 if ($_POST['action'] === 'save' && ($_SESSION['ip'] == $_SERVER['REMOTE_ADDR'])) {
-  $map_id = substr(md5(uniqid(mt_rand(), true)), 0, 6);
-  $map_author = $_POST['author'];
+  
+  $map_id = generateID($maps);
   
   $map_data = json_decode(decodeURIComponent($_POST['data']));
   $map_info = json_decode(decodeURIComponent($_POST['info']));
   
   $map = new stdClass();
   $map->id = $map_id;
-  $map->author = $map_author;
+  $map->author = $map_info->author;
   $map->title = $map_info->title;
   $map->desc = $map_info->desc;
   $map->data = $map_data;
@@ -50,7 +57,17 @@ else if ($_POST['action'] === 'load' && ($_SESSION['ip'] == $_SERVER['REMOTE_ADD
   //$map_author = $_POST['author'];
   
   $selected = $maps->findOne(array("id" => $map_id));
-  echo $selected == null ? "0" : json_encode($selected);
+  if($selected != null) {
+    $html = file_get_contents("http://www.openstreetmap.org/api/0.6/user/".$selected["author"]);
+    $dom = new DOMDocument;
+    $dom->loadXML($html);
+    $u = $dom->getElementsByTagName("user");
+    $selected["author_name"] = $u->item(0)->getAttribute("display_name");
+    
+    echo json_encode($selected);
+  } else {
+    echo "0";
+  }
 }
 
 else {
