@@ -43,6 +43,7 @@ if ($_POST['action'] === 'save' && ($_SESSION['ip'] == $_SERVER['REMOTE_ADDR']))
   $map->author = $map_info->author;
   $map->title = $map_info->title;
   $map->desc = $map_info->desc;
+  $map->access = $map_info->access;
   $map->data = $map_data;
 
   $maps->insert($map);
@@ -58,12 +59,15 @@ else if ($_POST['action'] === 'load' && ($_SESSION['ip'] == $_SERVER['REMOTE_ADD
   
   $selected = $maps->findOne(array("id" => $map_id));
   if($selected != null) {
-    $html = file_get_contents("http://www.openstreetmap.org/api/0.6/user/".$selected["author"]);
-    $dom = new DOMDocument;
-    $dom->loadXML($html);
-    $u = $dom->getElementsByTagName("user");
-    $selected["author_name"] = $u->item(0)->getAttribute("display_name");
-    
+    if($selected["author"] == "0" || $selected["author"] == "undefined") {
+      $selected["author_name"] = "anonimowy";
+    } else {
+      $html = file_get_contents("http://www.openstreetmap.org/api/0.6/user/".$selected["author"]);
+      $dom = new DOMDocument;
+      $dom->loadXML($html);
+      $u = $dom->getElementsByTagName("user");
+      $selected["author_name"] = $u->item(0)->getAttribute("display_name");
+    }
     echo json_encode($selected);
   } else {
     echo "0";

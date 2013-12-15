@@ -31,8 +31,7 @@ map.loadMap = function(data) {
   var desc = data.desc.length == 0 ? "<em>bez opisu</em>" : data.desc.replace(/#(\S+)/gm, '<a href="hashtag/\$1">#\$1</a>');
   var author = data.author_name;
   
-  var text = '<h2>'+title+'</h2><p>'+desc+'</p><p>Autor: '+author+'</p><h3>Obiekty na mapie</h3>';
-  text += '<ul class="text-objects">';
+  var text = '<h2>'+title+'</h2><p>'+desc+'</p><p>Autor: '+author+'</p>';
 
   var n = 0;
   L.geoJson(data.data, {
@@ -46,57 +45,35 @@ map.loadMap = function(data) {
         case 'cadetblue':   color_ = '#436978'; break;
         case 'darkpurple':  color_ = '#5b396b'; break;
       }
-
-      text += '<li data-id="'+n+'">';
+      
       map.items_[n] = layer;
+      n++;
 
       switch(feature.geometry.type) {
         case 'Point': 
           layer.setIcon(L.AwesomeMarkers.icon({
             icon: 'null', prefix: 'fa', markerColor: feature.properties.color
-          }));
-          text += '<i class="fa fa-map-marker"></i> ';
-        break;
+          })); break;
         case 'LineString':
-          layer.setStyle({color:color_});
-          text += '<i class="fa fa-chevron-right"></i> ';
-        break;
+          layer.setStyle({color:color_}); break;
         case 'Polygon':
-          layer.setStyle({color:color_});
-          text += '<i class="fa fa-square"></i> ';
-        break;
+          layer.setStyle({color:color_}); break;
       }
-
-      text += feature.properties.popup+'</li>';
-      n++;
       
       if (feature.properties) {
         if(feature.properties.popup)
           layer.bindPopup(feature.properties.popup);
       };
+      
+      layer.addTo(map.items);
     }
-  }).addTo(map.items);
-  text += '</ul>';
-  
-  map.fitBounds(map.items.getBounds());
-  
-  $('#tools .text').on('click', '.text-objects li', function() {
-    var item = map.items_[($(this).attr('data-id'))];
-    
-    if(item instanceof L.Marker) {
-      map.setView(item.getLatLng());
-    } else {
-      map.setView(item.getBounds().getCenter());
-    }
-    
-    if(item._popup !== undefined)
-      item.openPopup();
-    //console.log(map.items.getLayers());
-    return false;
   });
+
+  map.fitBounds(map.items.getBounds());
+  $('#tools .info').html(text);
+  edit.updateItemsList();
   
   $('#tools .controls .fa-chevron-down').click();
-  $('#tools .text').html(text);
 };
 
 /*

@@ -36,7 +36,8 @@ var Edit = function() {
         title : '',
         desc : '',
         created : '',
-        lastedit : ''
+        lastedit : '',
+        access : 'public'
       };
           
       /**
@@ -106,26 +107,16 @@ var Edit = function() {
           $('#modal').modal();
           return false;
         });
-        
-        $('#tools .text').on('click', '.text-objects li', function() {
-          var item = map.items_[($(this).attr('data-id'))];
-
-          if(item instanceof L.Marker) map.setView(item.getLatLng());
-          else map.setView(item.getBounds().getCenter());
-
-          item.fire('click');
-          return false;
-        });
       };
       
       /**
-       * 
+       * List of items
        * @returns {undefined}
        */
       this.updateItemsList = function() {
-        var text = '<ul class="text-objects">';
+        var text = '<h3>Obiekty na mapie</h3><ul class="text-objects">';
         //var n = 0;
-        
+        console.log(map.items);
         map.items.eachLayer(function(layer) {
           text += '<li data-id="'+map.items_.indexOf(layer)+'">';
           
@@ -140,8 +131,17 @@ var Edit = function() {
           //layer.bindPopup('Hello');
         });
         
-        
         $('#tools .text').html(text);
+        
+        $('#tools .text').on('click', '.text-objects li', function() {
+          var item = map.items_[($(this).attr('data-id'))];
+
+          if(item instanceof L.Marker) map.setView(item.getLatLng());
+          else map.setView(item.getBounds().getCenter());
+
+          item.fire('click');
+          return false;
+        });
       };
       
       /**
@@ -241,6 +241,7 @@ var Edit = function() {
        */
       this.saveMap = function() {
         this.mapInfo.author = auth.user_id;
+        if(this.mapInfo.author === undefined) this.mapInfo.author = 0;        //anonymous
         db.save(JSON.stringify(this.mapInfo), JSON.stringify(map.getJSON()));
       };
       

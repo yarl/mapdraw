@@ -194,7 +194,7 @@ code {
   padding-bottom: 10px;
 }
 
-.tools .text, .tools .edits {
+.tools .info, .tools .text, .tools .edits {
   display: none;
 }
 
@@ -233,7 +233,7 @@ code {
   padding-bottom: 10px;
 }
 
-.tools-max .text, .tools-max .edits, .tools-max .divider {
+.tools-max .info, .tools-max .text, .tools-max .edits, .tools-max .divider {
   display: block;
 }
 
